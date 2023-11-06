@@ -1,6 +1,7 @@
-import {  Component,  ViewEncapsulation,  AfterViewInit, OnInit} from '@angular/core';
+import {  Component,  ViewEncapsulation,  AfterViewInit, OnInit, OnDestroy} from '@angular/core';
 import { EndpointService } from '../endpoint.service';
 import { CaseType } from '../types.interface.';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-type-sourcing',
@@ -9,27 +10,32 @@ import { CaseType } from '../types.interface.';
   encapsulation: ViewEncapsulation.Emulated
 })
 
-export class TypeSourcingComponent implements OnInit  {
+export class TypeSourcingComponent implements OnInit, OnDestroy  {
 constructor(private endpoint: EndpointService){}
   
-caseTypes!: CaseType[];
+caseTypes: CaseType[] = [];
 selectedCaseType: CaseType | undefined;
+ctsubscription!: Subscription;
 
 
 
 ngOnInit() {
   this.sourceDropDown()
 }
-
-  sourceDropDown(){
-  try {
-    const data = this.endpoint.getCaseTypeList();
+ngOnDestroy() {
+  this.ctsubscription.unsubscribe();
+}
+sourceDropDown(){
+  this.loadCTResponse()
+}
+  loadCTResponse(){
+  this.ctsubscription = this.endpoint.getCTResponse().subscribe((response) => {
+      for(let i = 0; i < response.length; i++){
+        this.caseTypes.push(response[i])
+      }
+    });
     console.log("this is data")
-    console.log(data)
-    this.caseTypes = data
-  } catch (error){
-    console.error('Error:', error);
-  }
+    console.log(this.caseTypes)
 }
 
 
