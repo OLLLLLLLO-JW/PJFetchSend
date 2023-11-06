@@ -1,6 +1,6 @@
 export const typeResponse = [
     {
-        type: "New Account"
+        type: "New Account Today"
     },
     {
         type: "Close Account"

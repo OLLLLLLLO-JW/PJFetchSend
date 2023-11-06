@@ -1,5 +1,7 @@
 
 
 <div class="caseTypeContainer">
-<app-type-sourcing></app-type-sourcing>
+<app-type-sourcing (epCaseType)="logCaseType($event)"></app-type-sourcing>
 </div>
+<h2>Your Endpoint currently: {{endpointURLBase}}</h2>
+<app-create-type [creationType]="caseToCreate"></app-create-type>

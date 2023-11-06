@@ -1,3 +1,7 @@
 <div class="card flex justify-content-center">
-    <p-dropdown [options]="caseTypes" [(ngModel)]="selectedCaseType" optionLabel="type" placeholder="Select a Case Type"></p-dropdown>
+    <p-dropdown [options]="caseTypes"
+    [(ngModel)]="selectedCaseType"
+    optionLabel="type"
+    placeholder="Select a Case Type"
+    (onChange)="handleDropdownClick($event.value)"></p-dropdown>
 </div>

@@ -2,31 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable, map} from "rxjs";
 import { CaseType } from './types.interface.';
+import { CreationResponse } from './creation.interface';
 
 
 @Injectable({
   providedIn: 'root'
 })
 
-
 export class EndpointService {
 
   constructor(private http: HttpClient) { }
 
+  baseURL = 'http://localhost:3000/';
   typeURL = 'http://localhost:3000/type';
+  finalURL = '';
   caseTypes: CaseType[] = [];
-
-  getCaseTypeList(){
-    console.log("service Starting")
-    console.log("Get Type list")
-    this.getCTResponse().subscribe( (response) => {
-      for(let i = 0; i < response.length; i++){
-        this.caseTypes.push(response[i])
-      }      
-      return response
-    });
-    return this.caseTypes;
-  }
+  creationResponse: CreationResponse[] = [];
 
   getCTResponse(): Observable<CaseType[]>{
     return  this.http.get<CaseType[]>(this.typeURL).pipe(
@@ -34,6 +25,22 @@ export class EndpointService {
         return response.map(item => ({
           type: item.type,
         }));
+      })
+    ) 
+  }
+
+  callCaseCreation(endpointToAppend: string): Observable<CreationResponse[]>{
+    console.log("inside Case creation")
+    this.finalURL = this.baseURL + endpointToAppend
+    console.log(`final url: ${this.finalURL}`);
+    return  this.http.get<CreationResponse[]>(this.finalURL).pipe(
+      map((response: CreationResponse[]) => {
+        return response.map(item => ({
+          CustID: item.CustID,
+          accountType: item.accountType,
+          openDay: item.openDay
+        }));
+        
       })
     ) 
   }

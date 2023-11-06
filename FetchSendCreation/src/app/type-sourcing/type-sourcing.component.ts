@@ -1,4 +1,4 @@
-import {  Component,  ViewEncapsulation,  AfterViewInit, OnInit, OnDestroy} from '@angular/core';
+import {  Component,  ViewEncapsulation,  AfterViewInit, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 import { EndpointService } from '../endpoint.service';
 import { CaseType } from '../types.interface.';
 import { Subscription } from 'rxjs';
@@ -12,12 +12,12 @@ import { Subscription } from 'rxjs';
 
 export class TypeSourcingComponent implements OnInit, OnDestroy  {
 constructor(private endpoint: EndpointService){}
-  
+
+@Output() epCaseType:  EventEmitter<string> = new EventEmitter<string>();
+
 caseTypes: CaseType[] = [];
 selectedCaseType: CaseType | undefined;
 ctsubscription!: Subscription;
-
-
 
 ngOnInit() {
   this.sourceDropDown()
@@ -25,6 +25,7 @@ ngOnInit() {
 ngOnDestroy() {
   this.ctsubscription.unsubscribe();
 }
+
 sourceDropDown(){
   this.loadCTResponse()
 }
@@ -34,8 +35,17 @@ sourceDropDown(){
         this.caseTypes.push(response[i])
       }
     });
-    console.log("this is data")
-    console.log(this.caseTypes)
+}
+
+handleDropdownClick(selectedValue: any) {
+  if(selectedValue){
+    // console.log('Selected option value:', selectedValue);
+    this.epCaseType.emit(selectedValue.type.replace(/\s/g, ''));
+    
+
+  }
+  
+  
 }
 
 
