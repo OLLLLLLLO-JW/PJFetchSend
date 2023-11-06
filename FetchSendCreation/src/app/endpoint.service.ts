@@ -1,28 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { typeSource } from './types.interface.';
-import {Observable} from "rxjs";
+import {Observable, map} from "rxjs";
+import { CaseType } from './types.interface.';
+
 
 @Injectable({
   providedIn: 'root'
 })
 
 
-
 export class EndpointService {
 
-  
-
   constructor(private http: HttpClient) { }
-  typeURL = 'localhost:3000/type'
 
-  // types$: Observable<Types[]>;
+  typeURL = 'http://localhost:3000/type';
+  caseTypes: CaseType[] = [];
 
-  getTypeList(): Observable<any>{
-    console.log("inside Get Type list")
-    
-    const tempvalue = this.http.get<any>(this.typeURL)
-    // console.log(tempvalue)
-    return  tempvalue
+  getCaseTypeList(){
+    console.log("service Starting")
+    console.log("Get Type list")
+    this.getCTResponse().subscribe( (response) => {
+      for(let i = 0; i < response.length; i++){
+        this.caseTypes.push(response[i])
+      }      
+      return response
+    });
+    return this.caseTypes;
   }
+
+  getCTResponse(): Observable<CaseType[]>{
+    return  this.http.get<CaseType[]>(this.typeURL).pipe(
+      map((response: CaseType[]) => {
+        return response.map(item => ({
+          type: item.type,
+        }));
+      })
+    ) 
+  }
+
 }

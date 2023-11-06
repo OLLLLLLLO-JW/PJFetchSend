@@ -1,3 +1,3 @@
-export interface typeSource {
+export interface CaseType {
     type: string
 }

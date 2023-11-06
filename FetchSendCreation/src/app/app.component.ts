@@ -1,22 +1,18 @@
-import { Component } from '@angular/core';
-import { EndpointService } from './endpoint.service';
-import { response } from 'express';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated
 })
-export class AppComponent {
+
+export class AppComponent implements OnInit {
   title = 'FetchSendCreation';
-  constructor(private epService: EndpointService) {}
-
-  getTypes(){
-    
-    console.log("Inside Types");
-    this.epService.getTypeList().subscribe(response => {
-      console.log(`this is the response: ${response}`)
-    });
-
+  constructor() {}
+  ngOnInit(): void {
+    console.log("starting up!!")
   }
+
 }
